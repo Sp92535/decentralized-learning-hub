@@ -1,0 +1,90 @@
+.card-container{
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 20rem;
+    margin-top: 2rem;
+    z-index: -2;
+}
+
+.card {
+    margin: 20px;
+    border: 2px solid #ededed;
+    padding: 20px;
+    cursor: pointer;
+    border-radius: 10px; /* Slightly rounded corners for a modern look */
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+}
+
+.card-img{
+    width: 13rem;
+    margin-bottom: 1rem;
+}
+
+.card-title{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+}
+
+.card-reviews{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.ratings-start{
+    color: #ffcc00;
+    font-size: 1.2rem;
+    margin-right: 2px;
+}
+
+.total-reviews{
+    font-size: 0.9rem;
+    margin-left: 10px;
+    color: #666;
+}
+
+.card-price{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #222;
+}
+
+.price del {
+    color: #999;
+    margin-right: 5px;
+}
+
+.bag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    transition: background 0.3s ease;
+}
+
+.bag:hover {
+    background: #e0e0e0;
+}
+
+.bag-icon{
+    color: #535353;
+    font-size: 1.3rem;
+
+}

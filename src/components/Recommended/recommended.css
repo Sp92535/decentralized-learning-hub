@@ -1,0 +1,36 @@
+.recommended-flex{
+    display: flex;
+    margin-left: 20rem;
+}
+
+.recommended-title{
+    margin-left: 20rem;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-size: 24px;   
+    font-weight: 700; 
+    color: #222;
+}
+
+.btns {
+    padding: 12px 24px;
+    margin-right: 12px;
+    background-color: #fff; /* White background to match the card background */
+    color: #333; /* Dark text color to match the theme */
+    border: 2px solid #ededed; /* Subtle border matching the card's border */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btns:hover {
+    background-color: #f5f5f5; /* Light gray background on hover */
+    transform: translateY(-2px); /* Subtle lift effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow on hover */
+}
+
+.btns:focus {
+    outline: none; /* Removes outline on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Blue shadow on focus for accessibility */
+}

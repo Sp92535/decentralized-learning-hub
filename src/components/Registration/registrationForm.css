@@ -1,0 +1,110 @@
+/* RegistrationForm.css */
+.registration-form {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: 0.9rem;
+  color: #555555;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+  color: #444444;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="phone"] {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  background-color: #ffffff; /* Set background color to white */
+  color: #000000; /* Set text color to black */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="phone"]:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button.btn {
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+button.btn:hover {
+  background-color: #0056b3;
+}
+
+.clearfix {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 0.85rem;
+  }
+}
