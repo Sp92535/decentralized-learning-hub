@@ -4,8 +4,8 @@ import UserFactoryABI from "./UserFactory.json";
 import CourseFactoryABI from "./CourseFactory.json";
 
 // Deployed contract addresses from Hardhat deployment
-const USER_FACTORY_ADDRESS = "0xd2bB87aa9B274F3F5E7fB81C402A1bf4448d4eC0";
-const COURSE_FACTORY_ADDRESS = "0xc517f6AE6fdA5Fc7948D5D6fd81cA6Baf01CEFCb";
+const USER_FACTORY_ADDRESS = process.env.USER_FACTORY_ADDRESS;
+const COURSE_FACTORY_ADDRESS = process.env.COURSE_FACTORY_ADDRESS;
 
 export const getContracts = async () => {
   const provider = getEthereumProvider();
