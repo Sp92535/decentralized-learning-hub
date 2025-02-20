@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { registerUser } from "@/utils/contracts";
+import { loginUser, registerUser } from "@/utils/contracts";
 
 export default function Register() {
     const [username, setUsername] = useState("");
@@ -8,7 +8,11 @@ export default function Register() {
 
     const handleRegister = async () => {
         if (!username) return;
-
+        const hasAccount = await loginUser();
+        if(hasAccount){
+            setStatus("Account for this address already exists...")
+            return
+        }
         setStatus("Registering...");
         const success = await registerUser(username);
         setStatus(success ? "Registration Successful!" : "Registration Failed.");

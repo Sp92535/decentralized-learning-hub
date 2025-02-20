@@ -10,7 +10,7 @@ const config = {
       url: "http://127.0.0.1:8545", // Ganache RPC URL
       accounts: [
         process.env.PRIVATE_KEY_1, 
-        process.env.PRIVATE_KEY_2
+        // process.env.PRIVATE_KEY_2
       ],
     },
   },

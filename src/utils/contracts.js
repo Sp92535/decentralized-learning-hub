@@ -1,11 +1,11 @@
 import { Contract } from "ethers";
 import getEthereumProvider from "./provider";
-import UserFactoryABI from "./UserFactory.json";
-import CourseFactoryABI from "./CourseFactory.json";
+import UserFactoryABI from "./abi/UserFactory.json";
+import CourseFactoryABI from "./abi/CourseFactory.json";
 
 // Deployed contract addresses from Hardhat deployment
-const USER_FACTORY_ADDRESS = process.env.USER_FACTORY_ADDRESS;
-const COURSE_FACTORY_ADDRESS = process.env.COURSE_FACTORY_ADDRESS;
+const USER_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_USER_FACTORY_ADDRESS;
+const COURSE_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_COURSE_FACTORY_ADDRESS;
 
 export const getContracts = async () => {
   const provider = getEthereumProvider();
@@ -49,16 +49,9 @@ export const loginUser = async () => {
     const { userFactory, signer } = await getContracts();
     if (!userFactory) return;
 
-    // Call the contract function to check if the user exists
     const userData = await userFactory.login();
-    
+
     console.log(userData);
-    
-    
-    // if (userData.userAddress === "0x0000000000000000000000000000000000000000") {
-    //   console.error("User not registered!");
-    //   return null;
-    // }
 
     console.log("Login successful!", userData);
     return userData;

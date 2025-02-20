@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getContracts } from "@/utils/contracts";
-import Link from "next/link";
+import Register from "@/components/Register/Register";
+import Login from "@/components/Login/Login";
 
 
 export default function Home() {
@@ -48,9 +49,9 @@ export default function Home() {
       ) : (
         <div>
           <p>Connected ✅</p>
-          <Link href={"/register"}> Register </Link>
-          <br></br>
-          <Link href={"/login"}> Login </Link>
+          <Register />
+          OR
+          <Login />
         </div>
       )}
 
