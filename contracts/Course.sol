@@ -35,4 +35,12 @@ contract Course {
         buyers[_buyer] = true;
         buyersList.push(_buyer);
     }
+
+    function getData()
+        external
+        view
+        returns (address, string memory, string memory, uint256)
+    {
+        return (address(this), courseName, ipfsLink, price);
+    }
 }

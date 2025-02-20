@@ -39,8 +39,12 @@ contract UserFactory {
         });
     }
 
-    function login() external view returns (bool) {
-        return userDB[msg.sender].userAddress != address(0);
+    function login() external view returns (User memory) {
+        require(
+            userDB[msg.sender].userAddress != address(0),
+            "User not registered"
+        );
+        return userDB[msg.sender];
     }
 
     function getUserAddress(address user) external view returns (address) {

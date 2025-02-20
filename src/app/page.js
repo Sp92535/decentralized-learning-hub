@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getContracts } from "@/utils/contracts";
 import Register from "@/components/Register/Register";
 import Login from "@/components/Login/Login";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -10,6 +11,9 @@ export default function Home() {
   const [courseFactory, setCourseFactory] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
+
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
@@ -51,7 +55,20 @@ export default function Home() {
           <p>Connected ✅</p>
           <Register />
           OR
-          <Login />
+          <Login setIsLoggedIn={setIsLoggedIn} setUserData={setUserData} />
+
+          {
+            isLoggedIn &&
+
+            <>
+              <p>Welcome {userData.name}!  Address:{userData.address}</p>
+              <Link href={"/create-course"}>Create Course</Link><br />
+              <Link href={"/owned-courses"}>Owned Courses</Link><br />
+              <Link href={"/all-courses"}>Explore Courses</Link><br/>
+              <Link href={"/bought-courses"}>Bought Courses</Link><br/>
+            </>
+          }
+
         </div>
       )}
 

@@ -15,6 +15,7 @@ contract CourseFactory {
 
     uint256 totalCourses;
     mapping(address => bool) allCourses;
+    address[] allCourseAddress;
 
     constructor(address _userFactory) {
         totalCourses = 0;
@@ -41,6 +42,7 @@ contract CourseFactory {
         );
 
         allCourses[address(course)] = true;
+        allCourseAddress.push(address(course));
         userFactory.addOwnedCourse(msg.sender, address(course));
     }
 
@@ -52,5 +54,35 @@ contract CourseFactory {
 
         Course(_courseAddress).buyCourse{value: msg.value}(msg.sender);
         userFactory.addBoughtCourse(msg.sender, _courseAddress);
+    }
+
+    function getAllCourses()
+        external
+        view
+        returns (
+            address[] memory,
+            string[] memory,
+            string[] memory,
+            uint256[] memory
+        )
+    {
+        uint256 courseCount = allCourseAddress.length;
+
+        address[] memory courseAddresses = new address[](courseCount);
+        string[] memory courseNames = new string[](courseCount);
+        string[] memory ipfsLinks = new string[](courseCount);
+        uint256[] memory prices = new uint256[](courseCount);
+
+        for (uint256 i = 0; i < courseCount; i++) {
+            Course course = Course(allCourseAddress[i]);
+            (
+                courseAddresses[i],
+                courseNames[i],
+                ipfsLinks[i],
+                prices[i]
+            ) = course.getData();
+        }
+
+        return (courseAddresses, courseNames, ipfsLinks, prices);
     }
 }
