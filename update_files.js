@@ -20,16 +20,24 @@ console.log(".env updated successfully ✅");
 // Upadating ABI
 const UF = "artifacts/contracts/UserFactory.sol/UserFactory.json";
 const CF = "artifacts/contracts/CourseFactory.sol/CourseFactory.json";
+const Co = "artifacts/contracts/Course.sol/Course.json";
+const IUF = "artifacts/contracts/CourseFactory.sol/IUserFactory.json";
+
 
 const destinationDir = "src/utils/abi/";
 fs.mkdirSync(destinationDir, { recursive: true });
 
 const destination_UF = path.join(destinationDir, "UserFactory.json");
 const destination_CF = path.join(destinationDir, "CourseFactory.json");
+const destination_Co = path.join(destinationDir, "Course.json");
+const destination_IUF = path.join(destinationDir, "IUserFactory.json");
+
 
 
 // Copy the file
 fs.copyFileSync(UF, destination_UF);
 fs.copyFileSync(CF, destination_CF);
+fs.copyFileSync(IUF, destination_IUF);
+fs.copyFileSync(Co, destination_Co);
 
 console.log("ABI's copied successfully ✅");

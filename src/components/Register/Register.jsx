@@ -1,6 +1,6 @@
 "use client";
+import { loginUser, registerUser } from "@/utils/user_factory";
 import { useState } from "react";
-import { loginUser, registerUser } from "@/utils/contracts";
 
 export default function Register() {
     const [username, setUsername] = useState("");
