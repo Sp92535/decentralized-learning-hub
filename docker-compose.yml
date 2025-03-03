@@ -1,0 +1,13 @@
+networks:
+  dlh_network:
+    driver: bridge
+
+services:
+  ganache:
+    build: ./ganache
+    container_name: ganache
+    networks:
+      - dlh_network
+    ports:
+      # Remove this if external access is not needed
+      - "8545:8545"

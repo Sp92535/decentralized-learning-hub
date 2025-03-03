@@ -1,6 +1,10 @@
 run:
 	npm run dev
 
+build:
+	docker compose up --build -d
+	npm i 
+
 deploy:
 	rm -rf ./ignition/deployments
 	npx hardhat compile
