@@ -9,9 +9,9 @@ export default function Layout({ children }) {
       <html lang="en">
         <head />
         <body className="antialiased">
-          <Navbar />
+          {/* <Navbar /> */}
           <div className="flex">
-            <Sidebar />
+            {/* <Sidebar /> */}
             <main className="flex-grow">{children}</main>
           </div>
         </body>
