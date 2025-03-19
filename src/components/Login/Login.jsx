@@ -1,10 +1,19 @@
 "use client";
 import { loginUser } from "@/utils/user_factory";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Login({ setIsLoggedIn, setUserData }) {
     const [status, setStatus] = useState("");
     const [loading, setLoading] = useState(false);
+
+    // Check localStorage on component mount
+    useEffect(() => {
+        const storedUser = localStorage.getItem("userData");
+        if (storedUser) {
+            setUserData(JSON.parse(storedUser));
+            setIsLoggedIn(true);
+        }
+    }, []);
 
     const handleLogin = async () => {
         try {
@@ -13,6 +22,10 @@ export default function Login({ setIsLoggedIn, setUserData }) {
             const userData = await loginUser();
             
             if (userData) {
+                // Store in localStorage
+                localStorage.setItem("userData", JSON.stringify(userData));
+
+                // Update state
                 setIsLoggedIn(true);
                 setUserData(userData);
                 setStatus("Login Successful!");
