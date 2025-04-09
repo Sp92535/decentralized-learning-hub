@@ -1,28 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getOwnedCourses } from "@/utils/user_factory";
-import { Sidebar } from "@/components/Sidebar/sidebar"; // Import Sidebar
+import { getAllCourses } from "@/utils/course_factory";
+import { Sidebar } from "@/components/Sidebar/sidebar";
 
 export default function OwnedCourses() {
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const fetchCourses = async () => {
-        setLoading(true);
-        try {
-            const data = await getOwnedCourses();
-            console.log("Fetched courses:", data);
+      setStatus("🔍 Loading your courses...");
+      try {
+        const owned = await getOwnedCourses();
+        const all = await getAllCourses();
 
-            // If data is a Proxy, extract the actual array
-            const extractedData = data?.names ? [...data.names] : [];
-
-            setCourses(extractedData);
-        } catch (error) {
-            console.error("Error fetching courses:", error);
-            setCourses([]); // Ensure state is never undefined/null
-        }
-        setLoading(false);
+        // Filter only the courses that were owned
+        const ownedCourses = all.filter(course => owned.includes(course.address));
+        setCourses(ownedCourses);
+        setStatus(ownedCourses.length > 0 ? "" : "📚 You don't own any courses yet");
+      } catch (error) {
+        console.error("Failed to fetch owned courses:", error);
+        setStatus("❌ Failed to load your courses");
+      }
     };
     fetchCourses();
   }, []);
@@ -33,43 +33,75 @@ export default function OwnedCourses() {
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex flex-col items-center justify-center flex-1 p-8">
-        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl border border-gray-200 transition-all duration-300 hover:shadow-2xl">
-          <div className="flex items-center justify-center mb-8">
-            <span className="text-blue-600 text-3xl mr-3">📚</span>
-            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+      <div className="flex flex-col items-center justify-start flex-1 p-8">
+        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-4xl border border-gray-200 transition-all duration-300 hover:shadow-2xl">
+          <div className="flex items-center justify-center mb-6">
+            <span className="text-blue-600 text-3xl mr-2">📚</span>
+            <h1 className="text-3xl font-bold text-gray-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
               Owned Courses
             </h1>
           </div>
 
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-10">
-              <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mb-4"></div>
-              <p className="text-gray-600 font-medium">Loading your courses...</p>
+          {status && (
+            <div className={`p-3 rounded-lg text-center mb-6 ${
+              status.includes("✅") ? "bg-green-100 text-green-700" :
+              status.includes("❌") ? "bg-red-100 text-red-700" :
+              status.includes("📚") ? "bg-yellow-100 text-yellow-700" :
+              "bg-blue-100 text-blue-700"
+            }`}>
+              {status}
             </div>
-          ) : courses.length > 0 ? (
-            <div className="grid gap-4">
+          )}
+
+          {courses.length > 0 ? (
+            <div className="grid gap-6">
               {courses.map((course, index) => (
-                <div
-                  key={index}
-                  className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 flex items-center"
+                <div 
+                  key={index} 
+                  className="border border-gray-200 p-6 rounded-xl shadow-md bg-white hover:shadow-lg transition-all duration-200"
                 >
-                  <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center mr-4 shrink-0">
-                    {index + 1}
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start">
+                    <div className="mb-4 md:mb-0">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">{course.name}</h3>
+                      <p className="text-sm text-gray-500 mb-1">
+                        <span className="font-medium">Address:</span> {course.address.substring(0, 10)}...{course.address.slice(-8)}
+                      </p>
+                      <p className="text-sm text-gray-500 mb-3">
+                        <span className="font-medium">Price:</span> <span className="text-indigo-600 font-medium">{course.price} ETH</span>
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-start md:items-end">
+                      <a 
+                        href={course.ipfsLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
+                      >
+                        <span className="mr-2">📖</span>
+                        Access Course
+                      </a>
+                      <div className="text-sm text-gray-500 mt-2">
+                        <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-md font-medium">
+                          <span className="mr-1">✓</span>Owned
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-gray-800 font-medium text-lg">{course}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-center">
-              <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-4 w-16 h-16 flex items-center justify-center text-3xl">
-                📝
-              </div>
-              <p className="text-gray-600 font-medium mb-2">No courses found</p>
-              <p className="text-gray-500 text-sm max-w-md">
-                You don't own any courses yet. Explore available courses and add them to your collection.
-              </p>
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="text-6xl mb-4">🛒</div>
+              <p className="text-xl text-gray-600 mb-2">No courses owned yet</p>
+              <p className="text-gray-500 mb-6">Purchase some to start learning!</p>
+              <a 
+                href="/courses" 
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
+              >
+                <span className="mr-2">🔍</span>
+                Browse Courses
+              </a>
             </div>
           )}
         </div>

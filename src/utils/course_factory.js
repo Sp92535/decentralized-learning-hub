@@ -5,11 +5,20 @@ export const createCourse = async (name, ipfsLink, price) => {
     try {
         const { courseFactory, signer } = await getContracts();
         const tx = await courseFactory.createCourse(name, ipfsLink, ethers.parseEther(price));
+        const transactionHash = tx.hash;
         await tx.wait();
-        return { success: true, message: "Course Created Successfully!" };
+        return {
+            success: true,
+            message: "Course Created Successfully!",
+            transactionHash,
+        };
     } catch (error) {
         console.error("Course Creation Failed:", error);
-        return { success: false, message: "Course Creation Failed." };
+        return {
+            success: false,
+            message: "Course Creation Failed.",
+            transactionHash: null,
+        };
     }
 };
 

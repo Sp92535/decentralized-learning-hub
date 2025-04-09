@@ -59,9 +59,7 @@ export async function POST(req) {
 
     return NextResponse.json({
       success: true,
-      ipfsHash,
       ipfsLink,
-      ipfsUri: `https://gateway.pinata.cloud/ipfs/${ipfsLink}`,
     });
   } catch (error) {
     console.error("IPFS Upload Failed:", error);

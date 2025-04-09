@@ -53,12 +53,12 @@ export const uploadToIPFS = async (files) => {
     if (!jsonResult.success) {
       return { success: false, message: jsonResult.message };
     }
+    console.log(jsonResult);
 
     // Return the JSON CID/hash instead of a gateway URL
     return {
       success: true,
-      ipfsLink: `ipfs://${jsonResult.ipfsHash}`,
-      gatewayLink: `https://gateway.pinata.cloud/ipfs/${jsonResult.ipfsHash}`,
+      ipfsLink: jsonResult.ipfsLink,
     };
   } catch (error) {
     console.error("Upload error:", error);
