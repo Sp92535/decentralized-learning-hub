@@ -18,29 +18,84 @@ export async function POST(req) {
 
     const formData = new FormData();
 
+    // Prepare files for upload
     for (const file of files) {
       const arrayBuffer = await file.arrayBuffer();
       const blob = new Blob([arrayBuffer], { type: file.type });
       formData.append("file", blob, file.name);
     }
 
-    // Add metadata to avoid HTML content restrictions
-    const metadata = JSON.stringify({
-      name: "Course Content",
-      keyvalues: {
-        contentType: "application/json",
-        isHtml: "false",
-      },
-    });
-    formData.append("pinataMetadata", metadata);
+    // Handle optional metadata
+    const courseName = data.get("courseName");
+    const description = data.get("description");
+    const category = data.get("category");
+    const language = data.get("language");
+    const tags = data.get("tags") ? data.get("tags").split(",") : [];
+    const price = data.get("price");
+    const directoryName = data.get("directoryName");
+    const fileRenames = JSON.parse(data.get("fileRenames") || "{}");
+    const thumbnail = data.get("thumbnail");
 
-    // Add options to customize the pin
+    // Create metadata for course content
+    const fileMetadata = files.map((file) => {
+      const originalPath = file.name;
+      let displayPath = originalPath;
+
+      // Apply directory rename logic if necessary
+      if (directoryName) {
+        const pathParts = originalPath.split("/");
+        if (pathParts.length > 1) {
+          pathParts[0] = directoryName;
+          displayPath = pathParts.join("/");
+        }
+      }
+
+      // Apply file renaming if provided
+      if (fileRenames[originalPath]) {
+        displayPath = fileRenames[originalPath];
+      }
+
+      return {
+        originalName: file.name,
+        originalPath: originalPath,
+        displayPath: displayPath,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+      };
+    });
+
+    // Create metadata JSON for the course
+    const metadataJson = JSON.stringify({
+      courseName: courseName,
+      description: description,
+      category: category,
+      language: language,
+      tags: tags,
+      price: price,
+      directoryName: directoryName,
+      files: fileMetadata,
+      createdAt: new Date().toISOString(),
+    });
+
+    // Add metadata to formData
+    formData.append(
+      "pinataMetadata",
+      JSON.stringify({
+        name: "Course Content",
+        keyvalues: {
+          metadata: metadataJson,
+        },
+      })
+    );
+
+    // Pinning options (cidVersion: 1)
     const options = JSON.stringify({
       cidVersion: 1,
     });
     formData.append("pinataOptions", options);
 
-    // ✅ Upload to Pinata
+    // Upload to Pinata
     const response = await axios.post(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",
       formData,
@@ -57,6 +112,35 @@ export async function POST(req) {
     const ipfsHash = response.data.IpfsHash;
     const ipfsLink = `https://gateway.pinata.cloud/ipfs/${ipfsHash}/`;
 
+    // Handle thumbnail upload if provided
+    if (thumbnail) {
+      const thumbnailFormData = new FormData();
+      thumbnailFormData.append("file", thumbnail);
+
+      // Upload thumbnail
+      const thumbnailResponse = await axios.post(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        thumbnailFormData,
+        {
+          headers: {
+            pinata_api_key: pinataApiKey,
+            pinata_secret_api_key: pinataSecretKey,
+            "Content-Type": "multipart/form-data",
+          },
+          timeout: 120000,
+        }
+      );
+      const thumbnailHash = thumbnailResponse.data.IpfsHash;
+      const thumbnailUrl = `https://gateway.pinata.cloud/ipfs/${thumbnailHash}/`;
+
+      return NextResponse.json({
+        success: true,
+        ipfsLink,
+        thumbnailUrl,
+      });
+    }
+
+    // Return success with IPFS link to course metadata
     return NextResponse.json({
       success: true,
       ipfsLink,
