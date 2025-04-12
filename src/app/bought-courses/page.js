@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { getBoughtCourses } from "@/utils/course_marketplace";
 import { Sidebar } from "@/components/Sidebar/sidebar";
+import Link from "next/link";
 
 export default function BoughtCourses() {
   const [courses, setCourses] = useState([]);
