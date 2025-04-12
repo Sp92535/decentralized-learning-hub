@@ -17,8 +17,6 @@ console.log(".env updated successfully ✅");
 
 // Upadating ABI
 const CM = "artifacts/contracts/CourseMarketplace.sol/CourseMarketplace.json";
-const UR = "artifacts/contracts/UserRegistry.sol/UserRegistry.json";
-const CN = "artifacts/contracts/CourseNFT.sol/CourseNFT.json";
 
 
 
@@ -26,17 +24,10 @@ const destinationDir = "src/utils/abi/";
 fs.mkdirSync(destinationDir, { recursive: true });
 
 const destination_CM = path.join(destinationDir, "CourseMarketplace.json");
-const destination_UR = path.join(destinationDir, "UserRegistry.json");
-const destination_CN = path.join(destinationDir, "CourseNFT.json");
-
-
 
 
 // Copy the file
 fs.copyFileSync(CM, destination_CM);
-fs.copyFileSync(UR, destination_UR);
-fs.copyFileSync(CN, destination_CN);
-
 
 
 console.log("ABI's copied successfully ✅");
