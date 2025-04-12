@@ -1,5 +1,5 @@
 "use client";
-import { loginUser } from "@/utils/user_factory";
+import { loginUser } from "@/utils/course_marketplace";
 import { useState, useEffect } from "react";
 
 export default function Login({ setIsLoggedIn, setUserData }) {

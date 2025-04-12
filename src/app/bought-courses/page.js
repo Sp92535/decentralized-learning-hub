@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getAllCourses } from "@/utils/course_factory";
-import { getBoughtCourses } from "@/utils/user_factory";
+import { getBoughtCourses } from "@/utils/course_marketplace";
 import { Sidebar } from "@/components/Sidebar/sidebar";
 
 export default function BoughtCourses() {
@@ -12,11 +11,8 @@ export default function BoughtCourses() {
     const fetchCourses = async () => {
       setStatus("🔍 Loading your courses...");
       try {
-        const bought = await getBoughtCourses();
-        const all = await getAllCourses();
+        const boughtCourses = await getBoughtCourses();
 
-        // Filter only the courses that were bought
-        const boughtCourses = all.filter(course => bought.includes(course.address));
         setCourses(boughtCourses);
         setStatus(boughtCourses.length > 0 ? "" : "📚 You haven't bought any courses yet");
       } catch (error) {
@@ -64,7 +60,7 @@ export default function BoughtCourses() {
                     <div className="mb-4 md:mb-0">
                       <h3 className="text-xl font-semibold text-gray-800 mb-2">{course.name}</h3>
                       <p className="text-sm text-gray-500 mb-1">
-                        <span className="font-medium">Address:</span> {course.address.substring(0, 10)}...{course.address.substring(course.address.length - 8)}
+                        <span className="font-medium">Course Id:</span> {course.courseId}
                       </p>
                       <p className="text-sm text-gray-500 mb-3">
                         <span className="font-medium">Purchase Price:</span> <span className="text-indigo-600 font-medium">{course.price} ETH</span>

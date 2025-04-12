@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { uploadToIPFS } from "@/utils/upload";
-import { createCourse } from "@/utils/course_factory";
+import { createCourse } from "@/utils/course_marketplace";
 import { Sidebar } from "@/components/Sidebar/sidebar";
 
 export default function CreateCourse() {

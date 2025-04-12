@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getOwnedCourses } from "@/utils/user_factory";
-import { getAllCourses } from "@/utils/course_factory";
+import { getOwnedCourses } from "@/utils/course_marketplace";
 import { Sidebar } from "@/components/Sidebar/sidebar";
 import Link from "next/link";
 
@@ -13,11 +12,7 @@ export default function OwnedCourses() {
     const fetchCourses = async () => {
       setStatus("🔍 Loading your courses...");
       try {
-        const owned = await getOwnedCourses();
-        const all = await getAllCourses();
-
-        // Filter only the courses that were owned
-        const ownedCourses = all.filter(course => owned.includes(course.address));
+        const ownedCourses = await getOwnedCourses();
         setCourses(ownedCourses);
         setStatus(ownedCourses.length > 0 ? "" : "📚 You don't own any courses yet");
       } catch (error) {
@@ -64,7 +59,7 @@ export default function OwnedCourses() {
                     <div className="mb-4 md:mb-0">
                       <h3 className="text-xl font-semibold text-gray-800 mb-2">{course.name}</h3>
                       <p className="text-sm text-gray-500 mb-1">
-                        <span className="font-medium">Address:</span> {course.address.substring(0, 10)}...{course.address.slice(-8)}
+                        <span className="font-medium">Course Id:</span> {course.courseId}
                       </p>
                       <p className="text-sm text-gray-500 mb-3">
                         <span className="font-medium">Price:</span> <span className="text-indigo-600 font-medium">{course.price} ETH</span>

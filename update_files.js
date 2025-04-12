@@ -5,39 +5,38 @@ import path from "path";
 const addressPath = "ignition/deployments/chain-1337/deployed_addresses.json"
 const deploymentData = JSON.parse(fs.readFileSync(addressPath, "utf8"));
 
-const userFactoryAddress = deploymentData["DeploymentModule#UserFactory"];
-const courseFactoryAddress = deploymentData["DeploymentModule#CourseFactory"];
+const courseMarketplaceAddress = deploymentData["DeploymentModule#CourseMarketplace"];
 
 const envData = fs.readFileSync(".env", "utf8");
 const updatedEnvData = envData
-.replace(/NEXT_PUBLIC_USER_FACTORY_ADDRESS=.*/g, `NEXT_PUBLIC_USER_FACTORY_ADDRESS="${userFactoryAddress}"`)
-.replace(/NEXT_PUBLIC_COURSE_FACTORY_ADDRESS=.*/g, `NEXT_PUBLIC_COURSE_FACTORY_ADDRESS="${courseFactoryAddress}"`);
+.replace(/NEXT_PUBLIC_COURSE_MARKETPLACE_ADDRESS=.*/g, `NEXT_PUBLIC_COURSE_MARKETPLACE_ADDRESS="${courseMarketplaceAddress}"`);
 
 fs.writeFileSync(".env", updatedEnvData, "utf8");
 console.log(".env updated successfully ✅");
 
 
 // Upadating ABI
-const UF = "artifacts/contracts/UserFactory.sol/UserFactory.json";
-const CF = "artifacts/contracts/CourseFactory.sol/CourseFactory.json";
-const Co = "artifacts/contracts/Course.sol/Course.json";
-const IUF = "artifacts/contracts/CourseFactory.sol/IUserFactory.json";
+const CM = "artifacts/contracts/CourseMarketplace.sol/CourseMarketplace.json";
+const UR = "artifacts/contracts/UserRegistry.sol/UserRegistry.json";
+const CN = "artifacts/contracts/CourseNFT.sol/CourseNFT.json";
+
 
 
 const destinationDir = "src/utils/abi/";
 fs.mkdirSync(destinationDir, { recursive: true });
 
-const destination_UF = path.join(destinationDir, "UserFactory.json");
-const destination_CF = path.join(destinationDir, "CourseFactory.json");
-const destination_Co = path.join(destinationDir, "Course.json");
-const destination_IUF = path.join(destinationDir, "IUserFactory.json");
+const destination_CM = path.join(destinationDir, "CourseMarketplace.json");
+const destination_UR = path.join(destinationDir, "UserRegistry.json");
+const destination_CN = path.join(destinationDir, "CourseNFT.json");
+
 
 
 
 // Copy the file
-fs.copyFileSync(UF, destination_UF);
-fs.copyFileSync(CF, destination_CF);
-fs.copyFileSync(IUF, destination_IUF);
-fs.copyFileSync(Co, destination_Co);
+fs.copyFileSync(CM, destination_CM);
+fs.copyFileSync(UR, destination_UR);
+fs.copyFileSync(CN, destination_CN);
+
+
 
 console.log("ABI's copied successfully ✅");

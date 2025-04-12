@@ -1,5 +1,5 @@
 "use client";
-import { loginUser, registerUser } from "@/utils/user_factory";
+import { loginUser, registerUser } from "@/utils/course_marketplace";
 import { useState } from "react";
 
 export default function Register() {

@@ -1,11 +1,9 @@
 import { Contract } from "ethers";
 import getEthereumProvider from "./provider";
-import UserFactoryABI from "./abi/UserFactory.json";
-import CourseFactoryABI from "./abi/CourseFactory.json";
+import CourseMarketplaceABI from "./abi/CourseMarketplace.json";
 
 // Deployed contract addresses from Hardhat deployment
-const USER_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_USER_FACTORY_ADDRESS;
-const COURSE_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_COURSE_FACTORY_ADDRESS;
+const COURSE_MARKETPLACE_ADDRESS = process.env.NEXT_PUBLIC_COURSE_MARKETPLACE_ADDRESS;
 
 export const getContracts = async () => {
   const provider = getEthereumProvider();
@@ -13,17 +11,11 @@ export const getContracts = async () => {
 
   const signer = await provider.getSigner(); // ✅ Await signer for ethers v6
 
-  const userFactory = new Contract(
-    USER_FACTORY_ADDRESS,
-    UserFactoryABI.abi,
+  const courseMarketplace = new Contract(
+    COURSE_MARKETPLACE_ADDRESS,
+    CourseMarketplaceABI.abi,
     signer
   );
 
-  const courseFactory = new Contract(
-    COURSE_FACTORY_ADDRESS,
-    CourseFactoryABI.abi,
-    signer
-  );
-
-  return { userFactory, courseFactory, signer };
+  return { courseMarketplace, signer };
 };

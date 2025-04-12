@@ -7,8 +7,6 @@ import Login from "@/components/Login/Login";
 
 export default function Home() {
   const router = useRouter();
-  const [userFactory, setUserFactory] = useState(null);
-  const [courseFactory, setCourseFactory] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,8 +20,6 @@ export default function Home() {
 
         const contracts = await getContracts();
         if (contracts) {
-          setUserFactory(contracts.userFactory);
-          setCourseFactory(contracts.courseFactory);
           setIsConnected(true);
         }
       } catch (error) {
