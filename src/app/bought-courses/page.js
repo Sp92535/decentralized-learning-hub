@@ -27,7 +27,7 @@ export default function BoughtCourses() {
     <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Main Content */}
       <div className="flex flex-col items-center justify-start flex-1 p-8">
         <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-4xl border border-gray-200 transition-all duration-300 hover:shadow-2xl">
@@ -37,23 +37,22 @@ export default function BoughtCourses() {
               My Learning Library
             </h1>
           </div>
-          
+
           {status && (
-            <div className={`p-3 rounded-lg text-center mb-6 ${
-              status.includes("✅") ? "bg-green-100 text-green-700" :
-              status.includes("❌") ? "bg-red-100 text-red-700" :
-              status.includes("📚") ? "bg-yellow-100 text-yellow-700" :
-              "bg-blue-100 text-blue-700"
-            }`}>
+            <div className={`p-3 rounded-lg text-center mb-6 ${status.includes("✅") ? "bg-green-100 text-green-700" :
+                status.includes("❌") ? "bg-red-100 text-red-700" :
+                  status.includes("📚") ? "bg-yellow-100 text-yellow-700" :
+                    "bg-blue-100 text-blue-700"
+              }`}>
               {status}
             </div>
           )}
-          
+
           {courses.length > 0 ? (
             <div className="grid gap-6">
               {courses.map((course, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="border border-gray-200 p-6 rounded-xl shadow-md bg-white hover:shadow-lg transition-all duration-200"
                 >
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start">
@@ -67,15 +66,16 @@ export default function BoughtCourses() {
                       </p>
                     </div>
                     <div className="flex flex-col items-start md:items-end">
-                      <a 
-                        href={course.ipfsLink} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <Link
+                        href={{
+                          pathname: '/course',
+                          query: { link: course.ipfsLink }
+                        }}
                         className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
                       >
                         <span className="mr-2">📖</span>
                         Access Course
-                      </a>
+                      </Link>
                       <div className="text-sm text-gray-500 mt-2">
                         <span className="inline-block bg-green-100 text-green-800 px-2 py-1 rounded-md font-medium">
                           <span className="mr-1">✓</span>Purchased
@@ -91,8 +91,8 @@ export default function BoughtCourses() {
               <div className="text-6xl mb-4">🛒</div>
               <p className="text-xl text-gray-600 mb-2">You haven't purchased any courses yet</p>
               <p className="text-gray-500 mb-6">Browse our course catalog to start your learning journey</p>
-              <a 
-                href="/courses" 
+              <a
+                href="/courses"
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
               >
                 <span className="mr-2">🔍</span>
