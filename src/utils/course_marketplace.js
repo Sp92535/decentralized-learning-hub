@@ -3,7 +3,7 @@ import { getContracts } from "./contracts";
 
 
 export const registerUser = async (username) => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -19,7 +19,7 @@ export const registerUser = async (username) => {
 };
 
 export const loginUser = async () => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -41,7 +41,7 @@ export const loginUser = async () => {
 
 
 export const createCourse = async (name, ipfsLink, price) => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -64,7 +64,7 @@ export const createCourse = async (name, ipfsLink, price) => {
 };
 
 export const getAllCourses = async () => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -83,7 +83,7 @@ export const getAllCourses = async () => {
 };
 
 export const buyCourse = async (courseId, price) => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -99,7 +99,7 @@ export const buyCourse = async (courseId, price) => {
 };
 
 export const getOwnedCourses = async () => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -118,7 +118,7 @@ export const getOwnedCourses = async () => {
 };
 
 export const getBoughtCourses = async () => {
-    
+
     try {
         const { courseMarketplace, signer } = await getContracts();
 
@@ -133,5 +133,42 @@ export const getBoughtCourses = async () => {
     } catch (error) {
         console.error("Fetching Bought Courses Failed:", error);
         return [];
+    }
+};
+
+export const issueCertificate = async (courseId, ipfsLink) => {
+
+    try {
+
+        const { courseMarketplace, signer } = await getContracts();
+        const tx = await courseMarketplace.issueCertificate(courseId, ipfsLink);
+        await tx.wait();
+        return true;
+    } catch (error) {
+        console.error("Issuing Certificate Failed:", error);
+        return false;
+    }
+
+}
+
+export const getCertificateId = async (courseId) => {
+    try {
+        const { courseMarketplace } = await getContracts();
+        const certId = await courseMarketplace.getCertificate(courseId);
+        return certId.toString(); // return as string if needed for URL/query
+    } catch (error) {
+        console.error("Fetching certificate ID failed:", error);
+        return null;
+    }
+};
+
+export const getCertificateURL = async (certificateId) => {
+    try {
+        const { courseMarketplace } = await getContracts();
+        const url = await courseMarketplace.getCertificateURL(certificateId);
+        return url;
+    } catch (error) {
+        console.error("Fetching certificate URL failed:", error);
+        return null;
     }
 };

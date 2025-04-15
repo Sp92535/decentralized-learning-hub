@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./CourseNFT.sol";
 import "./UserRegistry.sol";
+import "./CertificateSBT.sol";
 
 /**
  * @title CourseMarketplace
@@ -13,6 +14,7 @@ contract CourseMarketplace is Ownable {
     // Contracts
     CourseNFT public courseNFT;
     UserRegistry public userRegistry;
+    CertificateSBT public certificateSBT;
 
     // Events
     event CourseCreated(uint256 indexed courseId, address indexed instructor);
@@ -22,7 +24,7 @@ contract CourseMarketplace is Ownable {
         // Initialize contracts
         courseNFT = new CourseNFT();
         userRegistry = new UserRegistry();
-
+        certificateSBT = new CertificateSBT();
         // Link contracts
         userRegistry.setCourseNFT(address(courseNFT));
     }
@@ -150,7 +152,7 @@ contract CourseMarketplace is Ownable {
             ) = courseNFT.getCourseDetails(purchasedCourseIds[i]);
         }
 
-        return (purchasedCourseIds, names, prices, instructors,ipfsLinks);
+        return (purchasedCourseIds, names, prices, instructors, ipfsLinks);
     }
 
     /**
@@ -187,6 +189,25 @@ contract CourseMarketplace is Ownable {
             ) = courseNFT.getCourseDetails(createdCourseIds[i]);
         }
 
-        return (createdCourseIds, names, prices, instructors,ipfsLinks);
+        return (createdCourseIds, names, prices, instructors, ipfsLinks);
+    }
+
+    function issueCertificate(
+        uint256 courseId,
+        string memory uri
+    ) external returns (uint256) {
+        // Issue the certificate
+        return certificateSBT.attest(msg.sender, courseId, uri);
+    }
+
+    function getCertificate(uint256 courseId) external view returns (uint256) {
+        // Get the certificate
+        return certificateSBT.getCertificate(msg.sender, courseId);
+    }
+    
+
+    function getCertificateURL(uint256 certificateId) external view returns (string memory) {
+        // Get the certificate
+        return certificateSBT.getCertificateURL(certificateId);
     }
 }

@@ -1,3 +1,5 @@
+import { issueCertificate } from "./course_marketplace";
+
 export const uploadToIPFS = async (
   files,
   courseName,
@@ -137,5 +139,30 @@ export const uploadToIPFS = async (
   } catch (error) {
     console.error("Upload error:", error);
     return { success: false, message: "Upload failed: " + error.message };
+  }
+};
+
+export const uploadCertificateToIPFS = async (name, course, courseId) => {
+  try {
+    const res = await fetch("/api/upload/certificate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, course }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Upload failed");
+    }
+
+    await issueCertificate(courseId, data.ipfsLink);
+
+    return data
+  } catch (err) {
+    console.error("Certificate Upload Error:", err);
+    return { success: false, message: err.message };
   }
 };

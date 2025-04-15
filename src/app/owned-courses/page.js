@@ -7,8 +7,15 @@ import Link from "next/link";
 export default function OwnedCourses() {
   const [courses, setCourses] = useState([]);
   const [status, setStatus] = useState("");
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("userData");
+    if (!storedUser) {
+      router.push("/");
+    } else {
+      setUserData(JSON.parse(storedUser));
+    }
     const fetchCourses = async () => {
       setStatus("🔍 Loading your courses...");
       try {
@@ -68,8 +75,12 @@ export default function OwnedCourses() {
                     <div className="flex flex-col items-start md:items-end">
                       <Link
                         href={{
-                          pathname: '/course',
-                          query: { link: course.ipfsLink }
+                          pathname: "/course",
+                          query: {
+                            name: userData.name,
+                            courseId: course.courseId.toString(),
+                            link: course.ipfsLink
+                          }
                         }}
                         className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
                       >

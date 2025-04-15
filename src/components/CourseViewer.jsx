@@ -2,11 +2,27 @@
 
 import { useEffect, useState } from "react";
 import StreamViewer from "./StreamViewer"; // Make sure this exists
+import { uploadCertificateToIPFS } from "@/utils/upload"; // Update this path accordingly
+import { getCertificate } from "@/utils/certificate";
 
-const CourseViewer = ({ link }) => {
+const CourseViewer = ({ link, name, courseId }) => {
   const [courseData, setCourseData] = useState(null);
   const [selectedUrl, setSelectedUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [certificateLink, setCertificateLink] = useState(null);
+
+  const handleIssueCertificate = async () => {
+    const courseName = courseData.courseName || "Untitled Course";
+
+    const res = await uploadCertificateToIPFS(name, courseName, courseId);
+
+    if (res.success) {
+      setCertificateLink(res.ipfsLink); // Save the link in state
+    } else {
+      alert("❌ Failed to issue certificate: " + res.message);
+    }
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,8 +30,15 @@ const CourseViewer = ({ link }) => {
       const json = await res.json();
       setCourseData(json);
     };
+    const checkCertificate = async () => {
+      const cert = await getCertificate(courseId);
+      if (cert.success) {
+        setCertificateLink(cert.certificateURL);
+      }
+    };
     fetchData();
-  }, [link]);
+    checkCertificate();
+  }, [link, courseId]);
 
   const handleSelect = (displayPath, fileName) => {
     const startPath = displayPath.substring(displayPath.indexOf("/")); // after first '/'
@@ -46,17 +69,16 @@ const CourseViewer = ({ link }) => {
             <button
               key={index}
               onClick={() => handleSelect(file.displayPath, file.originalName)}
-              className={`w-full px-4 py-3 text-left rounded-lg transition-all duration-200 flex items-center ${
-                selectedUrl && file.originalName === selectedFile
-                  ? "bg-blue-100 border-l-4 border-blue-500 text-blue-800"
-                  : "bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
-              }`}
+              className={`w-full px-4 py-3 text-left rounded-lg transition-all duration-200 flex items-center ${selectedUrl && file.originalName === selectedFile
+                ? "bg-blue-100 border-l-4 border-blue-500 text-blue-800"
+                : "bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
+                }`}
             >
               <span className="mr-2">
-                {file.originalName.endsWith(".pdf") ? "📄" : 
-                 file.originalName.endsWith(".mp4") ? "🎥" :
-                 file.originalName.endsWith(".mp3") ? "🎧" :
-                 file.originalName.endsWith(".jpg") || file.originalName.endsWith(".png") ? "🖼️" : "📝"}
+                {file.originalName.endsWith(".pdf") ? "📄" :
+                  file.originalName.endsWith(".mp4") ? "🎥" :
+                    file.originalName.endsWith(".mp3") ? "🎧" :
+                      file.originalName.endsWith(".jpg") || file.originalName.endsWith(".png") ? "🖼️" : "📝"}
               </span>
               <span className="font-medium truncate">{file.originalName}</span>
             </button>
@@ -71,16 +93,16 @@ const CourseViewer = ({ link }) => {
             <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-xl">
               <h4 className="font-medium text-gray-700 flex items-center">
                 <span className="mr-2">
-                  {selectedFile.endsWith(".pdf") ? "📄" : 
-                   selectedFile.endsWith(".mp4") ? "🎥" :
-                   selectedFile.endsWith(".mp3") ? "🎧" :
-                   selectedFile.endsWith(".jpg") || selectedFile.endsWith(".png") ? "🖼️" : "📝"}
+                  {selectedFile.endsWith(".pdf") ? "📄" :
+                    selectedFile.endsWith(".mp4") ? "🎥" :
+                      selectedFile.endsWith(".mp3") ? "🎧" :
+                        selectedFile.endsWith(".jpg") || selectedFile.endsWith(".png") ? "🖼️" : "📝"}
                 </span>
                 {selectedFile}
               </h4>
             </div>
           )}
-          
+
           <div className="p-4">
             {selectedUrl ? (
               <StreamViewer link={selectedUrl} />
@@ -91,6 +113,35 @@ const CourseViewer = ({ link }) => {
                 <p className="text-gray-400 text-sm mt-2">Course materials will be displayed here</p>
               </div>
             )}
+
+            {/* 📜 Issue Certificate Button */}
+            {!certificateLink && (
+              <div className="mt-6 text-center">
+                <button
+                  onClick={handleIssueCertificate}
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl shadow hover:opacity-90 transition-all duration-200"
+                >
+                  🎓 Issue Certificate
+                </button>
+              </div>
+            )}
+
+
+            {certificateLink && (
+              <div className="mt-4 text-center">
+                <p className="text-green-600 font-medium mb-1">✅ Certificate issued!</p>
+                <a
+                  href={certificateLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline break-words"
+                >
+                  View Certificate on IPFS
+                </a>
+              </div>
+            )}
+
+
           </div>
         </div>
       </div>
