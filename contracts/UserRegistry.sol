@@ -13,6 +13,7 @@ contract UserRegistry is Ownable {
         uint256 userId;
         address userAddress;
         string username;
+        bool isInstructor;
         bool registered;
     }
     
@@ -42,7 +43,7 @@ contract UserRegistry is Ownable {
      * @dev Registers a new user
      * @param _username Username for the user
      */
-    function register(address _userAdd, string calldata _username) external {
+    function register(address _userAdd, string calldata _username, bool _isInstructor) external {
         require(bytes(_username).length > 0, "Username cannot be empty");
         require(!users[_userAdd].registered, "User already registered");
         
@@ -50,6 +51,7 @@ contract UserRegistry is Ownable {
             userId: totalUsers++,
             userAddress: _userAdd,
             username: _username,
+            isInstructor:_isInstructor,
             registered: true
         });
         
@@ -59,9 +61,9 @@ contract UserRegistry is Ownable {
     /**
      * @dev Returns user data if registered
      */
-    function getUserData(address _userAdd) external view returns (address , string memory) {
+    function getUserData(address _userAdd) external view returns (address , string memory, bool) {
         require(users[_userAdd].registered, "User not registered");
-        return (_userAdd , users[_userAdd].username);
+        return (_userAdd , users[_userAdd].username, users[_userAdd].isInstructor);
     }
     
     /**
@@ -72,6 +74,14 @@ contract UserRegistry is Ownable {
         return users[_user].registered;
     }
     
+    /**
+     * @dev Checks if an address is istructor
+     * @param _user Address to check
+     */
+    function isInstructor(address _user) external view returns (bool) {
+        return users[_user].isInstructor;
+    }
+
     /**
      * @dev Gets purchased courses for the caller
      * @return courseIds Array of course IDs purchased by the user
@@ -111,6 +121,7 @@ contract UserRegistry is Ownable {
      */
     function getCreatedCourses(address _userAdd) external view returns (uint256[] memory) {
         require(users[_userAdd].registered, "User not registered");
+        require(users[_userAdd].isInstructor, "User not Instructor");
         
         // Get all course IDs
         uint256[] memory allCourses = courseNFT.getAllCourseIds();

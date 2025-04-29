@@ -6,20 +6,21 @@ export default function Register() {
     const [username, setUsername] = useState("");
     const [status, setStatus] = useState("");
     const [loading, setLoading] = useState(false);
+    const [isInstructor, setIsInstructor] = useState(false);
 
     const handleRegister = async () => {
         if (!username) return;
-        
+
         try {
             setLoading(true);
             const hasAccount = await loginUser();
-            if(hasAccount){
+            if (hasAccount) {
                 setStatus("Account for this address already exists");
                 return;
             }
-            
+
             setStatus("Registering...");
-            const success = await registerUser(username);
+            const success = await registerUser(username,isInstructor);
             setStatus(success ? "Registration Successful!" : "Registration Failed");
         } catch (error) {
             console.error("Registration error:", error);
@@ -32,7 +33,7 @@ export default function Register() {
     return (
         <div className="space-y-4">
             <h3 className="text-xl font-semibold text-gray-800 text-center">Register New Account</h3>
-            
+
             <div className="space-y-3">
                 <input
                     type="text"
@@ -41,20 +42,30 @@ export default function Register() {
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                
-                <button 
+
+                {/* Instructor Checkbox */}
+                <label className="flex items-center space-x-2 text-gray-700">
+                    <input
+                        type="checkbox"
+                        checked={isInstructor}
+                        onChange={(e) => setIsInstructor(e.target.checked)}
+                        className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    />
+                    <span>Want to be an instructor?</span>
+                </label>
+
+                <button
                     onClick={handleRegister}
-                    disabled={loading || !username} 
+                    disabled={loading || !username}
                     className="w-full px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 font-semibold rounded-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                     {loading ? "Registering..." : "Register"}
                 </button>
-                
+
                 {status && (
-                    <p className={`text-sm font-medium text-center ${
-                        status.includes("Successful") ? "text-green-600" : 
-                        status.includes("Registering") ? "text-blue-600" : "text-red-600"
-                    }`}>
+                    <p className={`text-sm font-medium text-center ${status.includes("Successful") ? "text-green-600" :
+                            status.includes("Registering") ? "text-blue-600" : "text-red-600"
+                        }`}>
                         {status}
                     </p>
                 )}

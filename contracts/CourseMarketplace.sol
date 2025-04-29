@@ -42,6 +42,7 @@ contract CourseMarketplace is Ownable {
     ) external returns (uint256) {
         // Check if user is registered
         require(userRegistry.isRegistered(msg.sender), "User not registered");
+        require(userRegistry.isInstructor(msg.sender), "User not instructor");
 
         // Create the course
         uint256 courseId = courseNFT.createCourse(
@@ -74,11 +75,14 @@ contract CourseMarketplace is Ownable {
      * @dev Registers a new user
      * @param _username Username for the user
      */
-    function registerUser(string calldata _username) external {
-        userRegistry.register(msg.sender, _username);
+    function registerUser(
+        string calldata _username,
+        bool _isInstructor
+    ) external {
+        userRegistry.register(msg.sender, _username, _isInstructor);
     }
 
-    function loginUser() external view returns (address, string memory) {
+    function loginUser() external view returns (address, string memory, bool isInstructor) {
         return userRegistry.getUserData(msg.sender);
     }
 
@@ -204,9 +208,10 @@ contract CourseMarketplace is Ownable {
         // Get the certificate
         return certificateSBT.getCertificate(msg.sender, courseId);
     }
-    
 
-    function getCertificateURL(uint256 certificateId) external view returns (string memory) {
+    function getCertificateURL(
+        uint256 certificateId
+    ) external view returns (string memory) {
         // Get the certificate
         return certificateSBT.getCertificateURL(certificateId);
     }

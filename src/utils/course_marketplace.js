@@ -2,12 +2,12 @@ import { ethers } from "ethers";
 import { getContracts } from "./contracts";
 
 
-export const registerUser = async (username) => {
+export const registerUser = async (username,instructor) => {
 
     try {
         const { courseMarketplace, signer } = await getContracts();
 
-        const tx = await courseMarketplace.registerUser(username); // ✅ Signer already attached
+        const tx = await courseMarketplace.registerUser(username,instructor); // ✅ Signer already attached
         await tx.wait();
 
         console.log("User registered successfully!");
@@ -30,7 +30,8 @@ export const loginUser = async () => {
         console.log("Login successful!", userData);
         return {
             address: userData[0],
-            name: userData[1]
+            name: userData[1],
+            instructor: userData[2],
         };
 
     } catch (error) {
