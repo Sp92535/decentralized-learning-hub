@@ -21,7 +21,9 @@ export default function OwnedCourses() {
       try {
         const ownedCourses = await getOwnedCourses();
         setCourses(ownedCourses);
-        setStatus(ownedCourses.length > 0 ? "" : "📚 You don't own any courses yet");
+        setStatus(
+          ownedCourses.length > 0 ? "" : "📚 You don't own any courses yet"
+        );
       } catch (error) {
         console.error("Failed to fetch owned courses:", error);
         setStatus("❌ Failed to load your courses");
@@ -46,11 +48,17 @@ export default function OwnedCourses() {
           </div>
 
           {status && (
-            <div className={`p-3 rounded-lg text-center mb-6 ${status.includes("✅") ? "bg-green-100 text-green-700" :
-              status.includes("❌") ? "bg-red-100 text-red-700" :
-                status.includes("📚") ? "bg-yellow-100 text-yellow-700" :
-                  "bg-blue-100 text-blue-700"
-              }`}>
+            <div
+              className={`p-3 rounded-lg text-center mb-6 ${
+                status.includes("✅")
+                  ? "bg-green-100 text-green-700"
+                  : status.includes("❌")
+                  ? "bg-red-100 text-red-700"
+                  : status.includes("📚")
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-blue-100 text-blue-700"
+              }`}
+            >
               {status}
             </div>
           )}
@@ -64,29 +72,47 @@ export default function OwnedCourses() {
                 >
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                     <div className="mb-4 md:mb-0">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2">{course.name}</h3>
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                        {course.name}
+                      </h3>
                       <p className="text-sm text-gray-500 mb-1">
-                        <span className="font-medium">Course Id:</span> {course.courseId}
+                        <span className="font-medium">Course Id:</span>{" "}
+                        {course.courseId}
                       </p>
                       <p className="text-sm text-gray-500 mb-3">
-                        <span className="font-medium">Price:</span> <span className="text-indigo-600 font-medium">{course.price} ETH</span>
+                        <span className="font-medium">Price:</span>{" "}
+                        <span className="text-indigo-600 font-medium">
+                          {course.price} ETH
+                        </span>
                       </p>
                     </div>
                     <div className="flex flex-col items-start md:items-end">
-                      <Link
-                        href={{
-                          pathname: "/course",
-                          query: {
-                            name: userData.name,
-                            courseId: course.courseId.toString(),
-                            link: course.ipfsLink
-                          }
-                        }}
-                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
-                      >
-                        <span className="mr-2">📖</span>
-                        Access Course
-                      </Link>
+                      <div className="flex flex-col sm:flex-row gap-2 mb-2">
+                        <Link
+                          href={{
+                            pathname: "/course",
+                            query: { link: course.ipfsLink },
+                          }}
+                          className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
+                        >
+                          <span className="mr-2">📖</span>
+                          Access Course
+                        </Link>
+                        <Link
+                          href={{
+                            pathname: "/modify-course",
+                            query: {
+                              courseId: course.courseId,
+                              ipfsLink: course.ipfsLink,
+                              name: course.name,
+                            },
+                          }}
+                          className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-lg shadow-md hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
+                        >
+                          <span className="mr-2">✏️</span>
+                          Modify Course
+                        </Link>
+                      </div>
                       <div className="text-sm text-gray-500 mt-2">
                         <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-md font-medium">
                           <span className="mr-1">✓</span>Owned
@@ -101,7 +127,9 @@ export default function OwnedCourses() {
             <div className="flex flex-col items-center justify-center py-12">
               <div className="text-6xl mb-4">🛒</div>
               <p className="text-xl text-gray-600 mb-2">No courses owned yet</p>
-              <p className="text-gray-500 mb-6">Purchase some to start learning!</p>
+              <p className="text-gray-500 mb-6">
+                Purchase some to start learning!
+              </p>
               <a
                 href="/courses"
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200 transform hover:-translate-y-1"
