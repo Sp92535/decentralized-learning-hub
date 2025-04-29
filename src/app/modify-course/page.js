@@ -453,7 +453,8 @@ export default function ModifyCourse() {
                   <ul className="list-disc pl-5">
                     {courseData.files.map((file, index) => (
                       <li key={index} className="mb-1">
-                        {file.originalName}
+                        {file.displayPath?.split("/").pop() ||
+                          file.originalName}
                       </li>
                     ))}
                   </ul>

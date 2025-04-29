@@ -23,7 +23,6 @@ const CourseViewer = ({ link, name, courseId }) => {
     }
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(link);
@@ -47,14 +46,15 @@ const CourseViewer = ({ link, name, courseId }) => {
     setSelectedFile(fileName);
   };
 
-  if (!courseData) return (
-    <div className="flex items-center justify-center p-8">
-      <div className="animate-pulse flex flex-col items-center">
-        <div className="w-12 h-12 rounded-full bg-blue-200 mb-3"></div>
-        <p className="text-blue-600 font-medium">Loading course content...</p>
+  if (!courseData)
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 rounded-full bg-blue-200 mb-3"></div>
+          <p className="text-blue-600 font-medium">Loading course content...</p>
+        </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div className="flex flex-col md:flex-row gap-6 p-2">
@@ -69,18 +69,27 @@ const CourseViewer = ({ link, name, courseId }) => {
             <button
               key={index}
               onClick={() => handleSelect(file.displayPath, file.originalName)}
-              className={`w-full px-4 py-3 text-left rounded-lg transition-all duration-200 flex items-center ${selectedUrl && file.originalName === selectedFile
-                ? "bg-blue-100 border-l-4 border-blue-500 text-blue-800"
-                : "bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
-                }`}
+              className={`w-full px-4 py-3 text-left rounded-lg transition-all duration-200 flex items-center ${
+                selectedUrl && file.originalName === selectedFile
+                  ? "bg-blue-100 border-l-4 border-blue-500 text-blue-800"
+                  : "bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
+              }`}
             >
               <span className="mr-2">
-                {file.originalName.endsWith(".pdf") ? "📄" :
-                  file.originalName.endsWith(".mp4") ? "🎥" :
-                    file.originalName.endsWith(".mp3") ? "🎧" :
-                      file.originalName.endsWith(".jpg") || file.originalName.endsWith(".png") ? "🖼️" : "📝"}
+                {file.originalName.endsWith(".pdf")
+                  ? "📄"
+                  : file.originalName.endsWith(".mp4")
+                  ? "🎥"
+                  : file.originalName.endsWith(".mp3")
+                  ? "🎧"
+                  : file.originalName.endsWith(".jpg") ||
+                    file.originalName.endsWith(".png")
+                  ? "🖼️"
+                  : "📝"}
               </span>
-              <span className="font-medium truncate">{file.originalName}</span>
+              <span className="font-medium truncate">
+                {file.displayPath?.split("/").pop() || file.originalName}
+              </span>
             </button>
           ))}
         </div>
@@ -93,10 +102,16 @@ const CourseViewer = ({ link, name, courseId }) => {
             <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-xl">
               <h4 className="font-medium text-gray-700 flex items-center">
                 <span className="mr-2">
-                  {selectedFile.endsWith(".pdf") ? "📄" :
-                    selectedFile.endsWith(".mp4") ? "🎥" :
-                      selectedFile.endsWith(".mp3") ? "🎧" :
-                        selectedFile.endsWith(".jpg") || selectedFile.endsWith(".png") ? "🖼️" : "📝"}
+                  {selectedFile.endsWith(".pdf")
+                    ? "📄"
+                    : selectedFile.endsWith(".mp4")
+                    ? "🎥"
+                    : selectedFile.endsWith(".mp3")
+                    ? "🎧"
+                    : selectedFile.endsWith(".jpg") ||
+                      selectedFile.endsWith(".png")
+                    ? "🖼️"
+                    : "📝"}
                 </span>
                 {selectedFile}
               </h4>
@@ -109,8 +124,12 @@ const CourseViewer = ({ link, name, courseId }) => {
             ) : (
               <div className="flex flex-col items-center justify-center p-12 text-center">
                 <div className="text-6xl mb-4">👈</div>
-                <p className="text-gray-600">Select a file from the sidebar to begin</p>
-                <p className="text-gray-400 text-sm mt-2">Course materials will be displayed here</p>
+                <p className="text-gray-600">
+                  Select a file from the sidebar to begin
+                </p>
+                <p className="text-gray-400 text-sm mt-2">
+                  Course materials will be displayed here
+                </p>
               </div>
             )}
 
@@ -126,10 +145,11 @@ const CourseViewer = ({ link, name, courseId }) => {
               </div>
             )}
 
-
             {certificateLink && (
               <div className="mt-4 text-center">
-                <p className="text-green-600 font-medium mb-1">✅ Certificate issued!</p>
+                <p className="text-green-600 font-medium mb-1">
+                  ✅ Certificate issued!
+                </p>
                 <a
                   href={certificateLink}
                   target="_blank"
@@ -140,8 +160,6 @@ const CourseViewer = ({ link, name, courseId }) => {
                 </a>
               </div>
             )}
-
-
           </div>
         </div>
       </div>

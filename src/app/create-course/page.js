@@ -198,7 +198,7 @@ export default function CreateCourse() {
                   disabled={isLoading}
                 >
                   <option value="development">Development</option>
-                  <option value="development">Technology</option>
+                  <option value="technology">Technology</option>
                   <option value="business">Business</option>
                   <option value="finance">Finance</option>
                   <option value="design">Design</option>
