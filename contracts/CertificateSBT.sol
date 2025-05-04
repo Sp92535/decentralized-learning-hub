@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
-
-contract CertificateSBT {
-    uint256 public totalIds = 9455;
+import "./CourseNFT.sol";
+contract CertificateSBT is Ownable {
+    uint256 public totalIds;
+    CourseNFT public courseNFT;
 
     struct Certificate {
         uint256 certificateId;
         string uri;
         bool valid;
+    }
+
+    constructor() Ownable(msg.sender) {
+        totalIds = 9455;
     }
 
     // user => courseId => certificate
@@ -17,11 +22,20 @@ contract CertificateSBT {
     event Attested(address indexed user, uint256 indexed courseId, string uri);
     event Revoked(address indexed user, uint256 indexed courseId);
 
+    /**
+     * @dev Sets the CourseNFT contract address
+     * @param _courseNFT Address of the CourseNFT contract
+     */
+    function setCourseNFT(address _courseNFT) external onlyOwner {
+        courseNFT = CourseNFT(_courseNFT);
+    }
+
     function attest(
         address user,
         uint256 courseId,
         string memory uri
     ) external returns (uint256) {
+        require(courseNFT.isBuyer(user, courseId),"Not original buyer if course.");
         require(
             bytes(certificates[user][courseId].uri).length == 0,
             "Already attested"

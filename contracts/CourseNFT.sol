@@ -21,6 +21,9 @@ contract CourseNFT is ERC1155, Ownable {
         bool exists;
     }
     
+    // id => buyers
+    mapping(uint256 => mapping(address=>bool)) buyers;
+
     // Mapping from token ID to Course
     mapping(uint256 => Course) private _courses;
     
@@ -91,7 +94,8 @@ contract CourseNFT is ERC1155, Ownable {
         
         // Mint a token for the buyer (token ID = course ID)
         _mint(buyer, _courseId, 1, "");
-        
+        buyers[_courseId][buyer] = true;
+
         emit CoursePurchased(_courseId, buyer);
     }
     
@@ -147,5 +151,14 @@ contract CourseNFT is ERC1155, Ownable {
         
         // User has access if they're the instructor or if they own the token
         return (course.instructor == _user || balanceOf(_user, _courseId) > 0);
+    }
+
+    function isBuyer(address _user, uint256 _courseId) external view returns (bool) {
+        Course memory course = _courses[_courseId];
+        if (!course.exists) {
+            return false;
+        }
+        
+        return buyers[_courseId][_user];
     }
 }

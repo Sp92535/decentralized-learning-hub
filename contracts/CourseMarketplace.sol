@@ -26,6 +26,7 @@ contract CourseMarketplace is Ownable {
         userRegistry = new UserRegistry();
         certificateSBT = new CertificateSBT();
         // Link contracts
+        certificateSBT.setCourseNFT(address(courseNFT));
         userRegistry.setCourseNFT(address(courseNFT));
     }
 
