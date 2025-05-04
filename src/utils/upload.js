@@ -2,7 +2,7 @@ import { issueCertificate } from "./course_marketplace";
 
 export const uploadToIPFS = async (
   files,
-  courseName,
+  name,
   price,
   directoryName,
   fileRenames = {},
@@ -10,7 +10,7 @@ export const uploadToIPFS = async (
   category = "",
   language = "",
   tags = [],
-  thumbnail = null
+  image = null
 ) => {
   try {
     const formData = new FormData();
@@ -46,9 +46,9 @@ export const uploadToIPFS = async (
       formData.append("file", file, newPath);
     });
 
-    // ✅ Add thumbnail if provided
-    if (thumbnail) {
-      formData.append("thumbnail", thumbnail);
+    // ✅ Add image if provided
+    if (image) {
+      formData.append("image", image);
     }
 
     // ✅ Upload Files to Pinata (Directory Upload)
@@ -101,7 +101,7 @@ export const uploadToIPFS = async (
 
     // ✅ Create Metadata JSON
     const jsonData = JSON.stringify({
-      courseName: courseName,
+      name: name,
       description: description,
       category: category,
       language: language,
@@ -109,7 +109,7 @@ export const uploadToIPFS = async (
       price: price,
       directoryHash: data.ipfsHash,
       directoryGatewayUrl: data.ipfsLink,
-      thumbnailUrl: thumbnail ? data.thumbnailUrl : null,
+      image: image ? data.imageUrl : null,
       files: fileMetadata,
       createdAt: new Date().toISOString(),
     });

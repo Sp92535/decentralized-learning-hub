@@ -26,7 +26,7 @@ export async function POST(req) {
     }
 
     // Handle optional metadata
-    const courseName = data.get("courseName");
+    const name = data.get("name");
     const description = data.get("description");
     const category = data.get("category");
     const language = data.get("language");
@@ -34,7 +34,7 @@ export async function POST(req) {
     const price = data.get("price");
     const directoryName = data.get("directoryName");
     const fileRenames = JSON.parse(data.get("fileRenames") || "{}");
-    const thumbnail = data.get("thumbnail");
+    const image = data.get("image");
 
     // Create metadata for course content
     const fileMetadata = files.map((file) => {
@@ -67,7 +67,7 @@ export async function POST(req) {
 
     // Create metadata JSON for the course
     const metadataJson = JSON.stringify({
-      courseName: courseName,
+      name: name,
       description: description,
       category: category,
       language: language,
@@ -112,15 +112,15 @@ export async function POST(req) {
     const ipfsHash = response.data.IpfsHash;
     const ipfsLink = `https://gateway.pinata.cloud/ipfs/${ipfsHash}/`;
 
-    // Handle thumbnail upload if provided
-    if (thumbnail) {
-      const thumbnailFormData = new FormData();
-      thumbnailFormData.append("file", thumbnail);
+    // Handle image upload if provided
+    if (image) {
+      const imageFormData = new FormData();
+      imageFormData.append("file", image);
 
-      // Upload thumbnail
-      const thumbnailResponse = await axios.post(
+      // Upload image
+      const imageResponse = await axios.post(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        thumbnailFormData,
+        imageFormData,
         {
           headers: {
             pinata_api_key: pinataApiKey,
@@ -130,13 +130,13 @@ export async function POST(req) {
           timeout: 120000,
         }
       );
-      const thumbnailHash = thumbnailResponse.data.IpfsHash;
-      const thumbnailUrl = `https://gateway.pinata.cloud/ipfs/${thumbnailHash}/`;
+      const imageHash = imageResponse.data.IpfsHash;
+      const imageUrl = `https://gateway.pinata.cloud/ipfs/${imageHash}/`;
 
       return NextResponse.json({
         success: true,
         ipfsLink,
-        thumbnailUrl,
+        imageUrl,
       });
     }
 
