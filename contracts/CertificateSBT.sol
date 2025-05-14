@@ -2,21 +2,19 @@
 pragma solidity ^0.8.20;
 import "./CourseNFT.sol";
 contract CertificateSBT is Ownable {
-    uint256 public totalIds;
     CourseNFT public courseNFT;
 
     struct Certificate {
-        uint256 certificateId;
+        string certificateId;
         string uri;
         bool valid;
     }
 
     constructor() Ownable(msg.sender) {
-        totalIds = 9455;
     }
 
     // user => courseId => certificate
-    mapping(uint256 => Certificate) public allCertificates;
+    mapping(string => Certificate) public allCertificates;
     mapping(address => mapping(uint256 => Certificate)) public certificates;
 
     event Attested(address indexed user, uint256 indexed courseId, string uri);
@@ -33,24 +31,24 @@ contract CertificateSBT is Ownable {
     function attest(
         address user,
         uint256 courseId,
-        string memory uri
-    ) external returns (uint256) {
+        string calldata uri,
+        string calldata certificateId
+    ) external returns (string memory) {
         require(courseNFT.isBuyer(user, courseId),"Not original buyer if course.");
         require(
             bytes(certificates[user][courseId].uri).length == 0,
             "Already attested"
         );
-        totalIds++;
-        certificates[user][courseId] = Certificate(totalIds, uri, true);
-        allCertificates[totalIds] = certificates[user][courseId];
+        certificates[user][courseId] = Certificate(certificateId, uri, true);
+        allCertificates[certificateId] = certificates[user][courseId];
         emit Attested(user, courseId, uri);
-        return totalIds;
+        return certificateId;
     }
 
     function revoke(address user, uint256 courseId) external {
         require(certificates[user][courseId].valid, "Already revoked");
         certificates[user][courseId].valid = false;
-        uint256 id = certificates[user][courseId].certificateId;
+        string memory id = certificates[user][courseId].certificateId;
         allCertificates[id].valid = false;
         emit Revoked(user, courseId);
     }
@@ -58,7 +56,7 @@ contract CertificateSBT is Ownable {
     function getCertificate(
         address user,
         uint256 courseId
-    ) external view returns (uint256) {
+    ) external view returns (string memory) {
         require(
             certificates[user][courseId].valid,
             "Certificate invalid or revoked"
@@ -67,7 +65,7 @@ contract CertificateSBT is Ownable {
     }
 
     function getCertificateURL(
-        uint256 certificateId
+        string calldata certificateId
     ) external view returns (string memory) {
         require(
             allCertificates[certificateId].valid,

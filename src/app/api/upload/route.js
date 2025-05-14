@@ -35,6 +35,8 @@ export async function POST(req) {
     const directoryName = data.get("directoryName");
     const fileRenames = JSON.parse(data.get("fileRenames") || "{}");
     const image = data.get("image");
+    const instructor = data.get("instructor");
+    const instructorAddress = data.get("instructorAddress");
 
     // Create metadata for course content
     const fileMetadata = files.map((file) => {
@@ -76,6 +78,8 @@ export async function POST(req) {
       directoryName: directoryName,
       files: fileMetadata,
       createdAt: new Date().toISOString(),
+      instructor: instructor,
+      instructorAddress: instructorAddress, 
     });
 
     // Add metadata to formData

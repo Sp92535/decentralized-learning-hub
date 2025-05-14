@@ -199,19 +199,20 @@ contract CourseMarketplace is Ownable {
 
     function issueCertificate(
         uint256 courseId,
-        string memory uri
-    ) external returns (uint256) {
+        string calldata uri,
+        string calldata certificateId
+    ) external returns (string memory) {
         // Issue the certificate
-        return certificateSBT.attest(msg.sender, courseId, uri);
+        return certificateSBT.attest(msg.sender, courseId, uri,certificateId);
     }
 
-    function getCertificate(uint256 courseId) external view returns (uint256) {
+    function getCertificate(uint256 courseId) external view returns (string memory) {
         // Get the certificate
         return certificateSBT.getCertificate(msg.sender, courseId);
     }
 
     function getCertificateURL(
-        uint256 certificateId
+        string calldata certificateId
     ) external view returns (string memory) {
         // Get the certificate
         return certificateSBT.getCertificateURL(certificateId);

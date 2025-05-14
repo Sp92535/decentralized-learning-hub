@@ -137,12 +137,12 @@ export const getBoughtCourses = async () => {
     }
 };
 
-export const issueCertificate = async (courseId, ipfsLink) => {
+export const issueCertificate = async (courseId, ipfsLink, certificateId) => {
 
     try {
 
         const { courseMarketplace, signer } = await getContracts();
-        const tx = await courseMarketplace.issueCertificate(courseId, ipfsLink);
+        const tx = await courseMarketplace.issueCertificate(courseId, ipfsLink, certificateId);
         await tx.wait();
         return true;
     } catch (error) {

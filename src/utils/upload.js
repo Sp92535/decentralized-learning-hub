@@ -10,7 +10,8 @@ export const uploadToIPFS = async (
   category = "",
   language = "",
   tags = [],
-  image = null
+  image = null,
+  userData
 ) => {
   try {
     const formData = new FormData();
@@ -103,6 +104,8 @@ export const uploadToIPFS = async (
     const jsonData = JSON.stringify({
       name: name,
       description: description,
+      instructor: userData.name,
+      instructorAddress: userData.address,
       category: category,
       language: language,
       tags: tags,
@@ -142,14 +145,21 @@ export const uploadToIPFS = async (
   }
 };
 
-export const uploadCertificateToIPFS = async (name, course, courseId) => {
+export const uploadCertificateToIPFS = async (userData, courseData, courseId) => {
   try {
     const res = await fetch("/api/upload/certificate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, course }),
+      body: JSON.stringify({
+        userData, course: {
+          name: courseData.name,
+          courseId: courseId,
+          instructor: courseData.instructor,
+          instructorAddress: courseData.instructorAddress,
+        }
+      }),
     });
 
     const data = await res.json();
@@ -158,7 +168,7 @@ export const uploadCertificateToIPFS = async (name, course, courseId) => {
       throw new Error(data.message || "Upload failed");
     }
 
-    await issueCertificate(courseId, data.ipfsLink);
+    await issueCertificate(courseId, data.ipfsLink, data.certificateId);
 
     return data
   } catch (err) {

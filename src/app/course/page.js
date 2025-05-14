@@ -8,7 +8,6 @@ export default function CoursePage() {
   const searchParams = useSearchParams();
   const link = searchParams.get("link");
   const courseId = searchParams.get("courseId");
-  const name = searchParams.get("name");
 
   if (!link) {
     return (
@@ -138,7 +137,7 @@ export default function CoursePage() {
 
           {/* Course content */}
           <div className="p-6">
-            <CourseViewer link={link} name={name} courseId={courseId} />
+            <CourseViewer link={link} courseId={courseId} />
           </div>
 
           {/* Navigation footer */}

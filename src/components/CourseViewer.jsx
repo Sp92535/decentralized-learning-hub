@@ -5,16 +5,17 @@ import StreamViewer from "./StreamViewer"; // Make sure this exists
 import { uploadCertificateToIPFS } from "@/utils/upload"; // Update this path accordingly
 import { getCertificate } from "@/utils/certificate";
 
-const CourseViewer = ({ link, name, courseId }) => {
+const CourseViewer = ({ link, courseId }) => {
   const [courseData, setCourseData] = useState(null);
   const [selectedUrl, setSelectedUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [certificateLink, setCertificateLink] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   const handleIssueCertificate = async () => {
-    const courseName = courseData.courseName || "Untitled Course";
+    const courseName = courseData.name || "Untitled Course";
 
-    const res = await uploadCertificateToIPFS(name, courseName, courseId);
+    const res = await uploadCertificateToIPFS(userData, courseData, courseId);
 
     if (res.success) {
       setCertificateLink(res.ipfsLink); // Save the link in state
@@ -35,6 +36,10 @@ const CourseViewer = ({ link, name, courseId }) => {
         setCertificateLink(cert.certificateURL);
       }
     };
+
+    const storedUser = localStorage.getItem("userData");
+    setUserData(JSON.parse(storedUser));
+
     fetchData();
     checkCertificate();
   }, [link, courseId]);
@@ -69,23 +74,22 @@ const CourseViewer = ({ link, name, courseId }) => {
             <button
               key={index}
               onClick={() => handleSelect(file.displayPath, file.originalName)}
-              className={`w-full px-4 py-3 text-left rounded-lg transition-all duration-200 flex items-center ${
-                selectedUrl && file.originalName === selectedFile
-                  ? "bg-blue-100 border-l-4 border-blue-500 text-blue-800"
-                  : "bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
-              }`}
+              className={`w-full px-4 py-3 text-left rounded-lg transition-all duration-200 flex items-center ${selectedUrl && file.originalName === selectedFile
+                ? "bg-blue-100 border-l-4 border-blue-500 text-blue-800"
+                : "bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
+                }`}
             >
               <span className="mr-2">
                 {file.originalName.endsWith(".pdf")
                   ? "📄"
                   : file.originalName.endsWith(".mp4")
-                  ? "🎥"
-                  : file.originalName.endsWith(".mp3")
-                  ? "🎧"
-                  : file.originalName.endsWith(".jpg") ||
-                    file.originalName.endsWith(".png")
-                  ? "🖼️"
-                  : "📝"}
+                    ? "🎥"
+                    : file.originalName.endsWith(".mp3")
+                      ? "🎧"
+                      : file.originalName.endsWith(".jpg") ||
+                        file.originalName.endsWith(".png")
+                        ? "🖼️"
+                        : "📝"}
               </span>
               <span className="font-medium truncate">
                 {file.displayPath?.split("/").pop() || file.originalName}
@@ -105,13 +109,13 @@ const CourseViewer = ({ link, name, courseId }) => {
                   {selectedFile.endsWith(".pdf")
                     ? "📄"
                     : selectedFile.endsWith(".mp4")
-                    ? "🎥"
-                    : selectedFile.endsWith(".mp3")
-                    ? "🎧"
-                    : selectedFile.endsWith(".jpg") ||
-                      selectedFile.endsWith(".png")
-                    ? "🖼️"
-                    : "📝"}
+                      ? "🎥"
+                      : selectedFile.endsWith(".mp3")
+                        ? "🎧"
+                        : selectedFile.endsWith(".jpg") ||
+                          selectedFile.endsWith(".png")
+                          ? "🖼️"
+                          : "📝"}
                 </span>
                 {selectedFile}
               </h4>

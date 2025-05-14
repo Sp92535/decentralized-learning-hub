@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { uploadToIPFS } from "@/utils/upload";
 import { createCourse } from "@/utils/course_marketplace";
 import { Sidebar } from "@/components/Sidebar/sidebar";
+import { useRouter } from "next/navigation";
 
 export default function CreateCourse() {
+  const [userData, setUserData] = useState(null);
+
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [category, setCategory] = useState("development");
@@ -24,6 +27,17 @@ export default function CreateCourse() {
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef(null);
   const thumbnailInputRef = useRef(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const user = localStorage.getItem("userData");
+    if (user) {
+      setUserData(JSON.parse(user));
+    } else {
+      router.push("/");
+    }
+  },[])
 
   // ✅ Handle file selection
   const handleFileChange = (e) => {
@@ -98,7 +112,8 @@ export default function CreateCourse() {
         category,
         language,
         tagsList,
-        thumbnail
+        thumbnail,
+        userData
       );
 
       if (!success) {

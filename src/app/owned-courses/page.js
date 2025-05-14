@@ -91,7 +91,6 @@ export default function OwnedCourses() {
                           href={{
                             pathname: "/course",
                             query: {
-                              name: userData.name,
                               courseId: course.courseId.toString(),
                               link: course.ipfsLink
                             },
